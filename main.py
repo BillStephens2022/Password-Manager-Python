@@ -4,7 +4,6 @@ from random import randint, choice, shuffle
 import pyperclip
 import json
 
-
 # Generate Random Password
 
 def generate_password():
@@ -53,6 +52,21 @@ def save():
             password_input.delete(0, END) #clears password input box
             #note that email input box is not cleared as it is set to a default value, so user doesnt have to keep entering their own email every time.
 
+# Find password by website
+def find_password():
+    website = website_input.get()
+    try:
+        with open("data.json") as data_file:
+            data = json.load(data_file) #loads data as a dictionary
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error", message="No Data File Found.")
+    else:
+        if website in data:
+            email = data[website]["email"]
+            password = data[website]["password"]
+            messagebox.showinfo(title=website, message=f"Email: {email}\nPassword: {password}")
+        else:
+            messagebox.showinfo(title="Error", message=f"No details for {website} exists.")
 
 # Setup UI
 window = Tk()
@@ -66,8 +80,8 @@ canvas.grid(column=1, row=0)
 
 website_label = Label(text="Website:")
 website_label.grid(column=0, row=1)
-website_input = Entry(width=38)
-website_input.grid(column=1, row=1, columnspan=2)
+website_input = Entry(width=21)
+website_input.grid(column=1, row=1)
 website_input.focus()
 
 email_label = Label(text="Email/Username:")
@@ -80,6 +94,9 @@ password_label = Label(text="Password:")
 password_label.grid(column=0, row=3)
 password_input = Entry(width=21)
 password_input.grid(column=1, row=3)
+
+search_button = Button(text="Search", width=13, command=find_password)
+search_button.grid(column=2, row=1)
 
 generate_password_button = Button(text="Generate Password", command=generate_password)
 generate_password_button.grid(column=2, row=3)
