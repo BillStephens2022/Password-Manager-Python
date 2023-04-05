@@ -38,10 +38,14 @@ def save():
     if len(website) == 0 or len(password) == 0 or len(email) == 0:
         messagebox.showinfo(title="Oops", message="Please make sure you haven't left any fields empty.")
     else: 
-        with open("data.json", "w") as data_file:
-            json.dump(new_data, data_file, indent=4)
-            website_input.delete(0, END)
-            password_input.delete(0, END)
+        with open("data.json", "r") as data_file:      #opens file in read mode    
+            data = json.load(data_file) #reads old data, and converts the json into a dictionary and saves in variable called 'data'
+            data.update(new_data)  #uses update method to add the new data (need to use update so that it doesn't just append a brand new json object, we need to update the existing json object with a new record)
+        with open("data.json", "w") as data_file:    #opens file in write mode
+            json.dump(data, data_file, indent=4)  #writes the updated json object to the json file overwriting the old.
+            website_input.delete(0, END)  #clears website input box
+            password_input.delete(0, END) #clears password input box
+            #note that email input box is not cleared as it is set to a default value, so user doesnt have to keep entering their own email every time.
 
 
 # Setup UI
